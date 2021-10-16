@@ -3,8 +3,6 @@ package com.example.demo;
 import com.example.demo.dto.PersonDto;
 import com.example.demo.service.TeacherService;
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.customfield.CustomField;
 import com.vaadin.flow.component.formlayout.FormLayout;
@@ -26,8 +24,6 @@ public class PersonForm extends Div {
     private final PhoneNumberField phone = new PhoneNumberField("Phone number");
     private final TextField occupation = new TextField("Occupation");
 
-    private final Button cancel = new Button("Cancel");
-    private final Button save = new Button("Save");
 
     @Autowired
     private TeacherService teacherService;
@@ -40,20 +36,12 @@ public class PersonForm extends Div {
 
         add(createTitle());
         add(createFormLayout());
-        add(createButtonLayout());
 
         binder.bindInstanceFields(this);
         clearForm();
-
-        cancel.addClickListener(e -> clearForm());
-        save.addClickListener(e -> {
-            teacherService.saveOrUpdate(binder.getBean());
-
-            System.out.println(binder.getBean());
-        });
     }
 
-    private void clearForm() {
+    public void clearForm() {
         binder.setBean(new PersonDto());
     }
 
@@ -66,15 +54,6 @@ public class PersonForm extends Div {
         email.setErrorMessage("Please enter a valid email address");
         formLayout.add(name, surname, phone, email, occupation);
         return formLayout;
-    }
-
-    private Component createButtonLayout() {
-        HorizontalLayout buttonLayout = new HorizontalLayout();
-        buttonLayout.addClassName("button-layout");
-        save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        buttonLayout.add(save);
-        buttonLayout.add(cancel);
-        return buttonLayout;
     }
 
     private static class PhoneNumberField extends CustomField<String> {

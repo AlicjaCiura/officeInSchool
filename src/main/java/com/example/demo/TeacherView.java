@@ -1,12 +1,12 @@
 package com.example.demo;
 
+import com.example.demo.dto.PersonDto;
 import com.example.demo.model.Teacher;
+import com.example.demo.service.TeacherService;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.grid.HeaderRow;
-import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.provider.ListDataProvider;
@@ -32,7 +32,9 @@ public class TeacherView extends HorizontalLayout {
     private ListDataProvider<Teacher> dataProvider;
     private Button addNew;
     @Autowired
-    private PersonForm form;
+    private DialogNewPerson dialogNewPerson;
+    @Autowired
+    private TeacherService teacherService;
 
     private Grid.Column<Teacher> idColumn;
     private Grid.Column<Teacher> firstNameColumn;
@@ -50,15 +52,11 @@ public class TeacherView extends HorizontalLayout {
     private void createButton() {
         addNew = new Button("New teacher");
         addNew.addClickListener(e -> {
-            Dialog dialog = new Dialog();
-            dialog.add(new H2("Create new teacher"));
-            dialog.setWidth("50%");
-            dialog.setHeight("50%");
-            dialog.add(form);
-            dialog.open();
 
+            dialogNewPerson.open();
         });
     }
+
 
     private void createGrid() {
         createGridComponent();
