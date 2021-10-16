@@ -1,18 +1,15 @@
 package com.example.demo.model;
 
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "Teachers")
 @EqualsAndHashCode
-@NoArgsConstructor
-@Builder
 public class Teacher {
 
     @Id
@@ -32,12 +29,9 @@ public class Teacher {
     @Getter
     @Column
     @Email
-    private  String email;
+    private String email;
 
     @Getter
     @Column
     private String phone;
-
-
-
 }

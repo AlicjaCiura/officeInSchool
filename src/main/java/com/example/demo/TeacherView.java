@@ -27,6 +27,7 @@ import java.util.List;
 @UIScope
 public class TeacherView extends HorizontalLayout {
 
+    public static final String FILTER = "Filter";
     private Grid<Teacher> grid;
     private ListDataProvider<Teacher> dataProvider;
     private Button addNew;
@@ -70,7 +71,6 @@ public class TeacherView extends HorizontalLayout {
         grid.setSelectionMode(Grid.SelectionMode.MULTI);
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER, GridVariant.LUMO_COLUMN_BORDERS);
         grid.setMaxHeight("80%");
-        
 
         dataProvider = new ListDataProvider<>(getTeachers());
         grid.setDataProvider(dataProvider);
@@ -102,7 +102,7 @@ public class TeacherView extends HorizontalLayout {
         HeaderRow filterRow = grid.appendHeaderRow();
 
         TextField idFilter = new TextField();
-        idFilter.setPlaceholder("Filter");
+        idFilter.setPlaceholder(FILTER);
         idFilter.setClearButtonVisible(true);
         idFilter.setWidth("100%");
         idFilter.setValueChangeMode(ValueChangeMode.EAGER);
@@ -111,7 +111,7 @@ public class TeacherView extends HorizontalLayout {
         filterRow.getCell(idColumn).setComponent(idFilter);
 
         TextField firstNameFilter = new TextField();
-        firstNameFilter.setPlaceholder("Filter");
+        firstNameFilter.setPlaceholder(FILTER);
         firstNameFilter.setClearButtonVisible(true);
         firstNameFilter.setWidth("100%");
         firstNameFilter.setValueChangeMode(ValueChangeMode.EAGER);
@@ -120,7 +120,7 @@ public class TeacherView extends HorizontalLayout {
         filterRow.getCell(firstNameColumn).setComponent(firstNameFilter);
 
         TextField lastNameFilter = new TextField();
-        lastNameFilter.setPlaceholder("Filter");
+        lastNameFilter.setPlaceholder(FILTER);
         lastNameFilter.setClearButtonVisible(true);
         lastNameFilter.setWidth("100%");
         lastNameFilter.setValueChangeMode(ValueChangeMode.EAGER);
@@ -139,6 +139,10 @@ public class TeacherView extends HorizontalLayout {
     }
 
     private Teacher createTeacher(long id, String firstName, String lastName) {
-        return new Teacher(id, lastName, firstName);
+        return Teacher.builder()
+                .id(id)
+                .firstName(firstName)
+                .lastName(lastName)
+                .build();
     }
 }

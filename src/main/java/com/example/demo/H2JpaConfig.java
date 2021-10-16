@@ -15,15 +15,13 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
+import java.util.Objects;
 import java.util.Properties;
 
 
 @Configuration
 @EnableJpaRepositories(basePackages = {"com.example.demo.service"})
 @PropertySource("classpath:application.properties")
-//@PropertySource("classpath:persistence-derby.properties")
-//@PropertySource("classpath:persistence-hsqldb.properties")
-//@PropertySource("classpath:persistence-sqlite.properties")
 @EnableTransactionManagement
 @Profile("default")
 public class H2JpaConfig {
@@ -34,7 +32,7 @@ public class H2JpaConfig {
     @Bean
     public DataSource dataSource() {
         final DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(env.getProperty("spring.datasource.driverClassName"));
+        dataSource.setDriverClassName(Objects.requireNonNull(env.getProperty("spring.datasource.driverClassName")));
         dataSource.setUrl(env.getProperty("spring.datasource.url"));
         dataSource.setUsername(env.getProperty("spring.datasource.username"));
         dataSource.setPassword(env.getProperty("spring.datasource.password"));
@@ -45,7 +43,7 @@ public class H2JpaConfig {
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         final LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource());
-        em.setPackagesToScan(new String[]{"com.example.demo"});
+        em.setPackagesToScan("com.example.demo");
         em.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
         em.setJpaProperties(additionalProperties());
         return em;
@@ -66,6 +64,5 @@ public class H2JpaConfig {
         hibernateProperties.setProperty("hibernate.show_sql", env.getProperty("spring.jpa.show-sql"));
 
         return hibernateProperties;
-
     }
 }
