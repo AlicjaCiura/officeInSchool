@@ -1,6 +1,5 @@
 package com.example.demo;
 
-import com.example.demo.dto.PersonDto;
 import com.example.demo.model.Teacher;
 import com.example.demo.service.TeacherService;
 import com.vaadin.flow.component.button.Button;
@@ -13,18 +12,15 @@ import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import com.vaadin.flow.spring.annotation.UIScope;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 
 @PageTitle("Teachers")
 @Route(value = "teachers", layout = MainLayout.class)
-@SpringComponent
-@UIScope
 public class TeacherView extends HorizontalLayout {
 
     public static final String FILTER = "Filter";
@@ -32,31 +28,28 @@ public class TeacherView extends HorizontalLayout {
     private ListDataProvider<Teacher> dataProvider;
     private Button addNew;
     @Autowired
-    private DialogNewPerson dialogNewPerson;
-    @Autowired
-    private TeacherService teacherService;
+    private final TeacherService teacherService;
 
     private Grid.Column<Teacher> idColumn;
     private Grid.Column<Teacher> firstNameColumn;
     private Grid.Column<Teacher> lastNameColumn;
+    private Grid.Column<Teacher> phoneNumberColumn;
+    private Grid.Column<Teacher> mailColumn;
 
-    public TeacherView() {
+    public TeacherView(@Autowired TeacherService teacherService) {
+        this.teacherService = teacherService;
         addClassName("hello-world-view");
         setSizeFull();
         createGrid();
         createButton();
         add(grid, addNew);
-        add(addNew);
     }
 
     private void createButton() {
+        DialogNewPerson d = new DialogNewPerson(teacherService);
         addNew = new Button("New teacher");
-        addNew.addClickListener(e -> {
-
-            dialogNewPerson.open();
-        });
+        addNew.addClickListener(e -> d.open());
     }
-
 
     private void createGrid() {
         createGridComponent();
@@ -69,8 +62,7 @@ public class TeacherView extends HorizontalLayout {
         grid.setSelectionMode(Grid.SelectionMode.MULTI);
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER, GridVariant.LUMO_COLUMN_BORDERS);
         grid.setMaxHeight("80%");
-
-        dataProvider = new ListDataProvider<>(getTeachers());
+        dataProvider = new ListDataProvider<>(teacherService.findAll());
         grid.setDataProvider(dataProvider);
     }
 
@@ -78,6 +70,8 @@ public class TeacherView extends HorizontalLayout {
         createIdColumn();
         createFirstNameColumn();
         createLastNameColumn();
+        createPhoneNumberColumn();
+        createMailColumn();
     }
 
     private void createIdColumn() {
@@ -95,52 +89,45 @@ public class TeacherView extends HorizontalLayout {
                 .setComparator(Teacher::getLastName).setHeader("Last name");
     }
 
+    private void createPhoneNumberColumn() {
+        phoneNumberColumn =
+                grid.addColumn(Teacher::getPhone)
+                        .setComparator(Teacher::getPhone).setHeader("Phone number");
+    }
+
+    private void createMailColumn() {
+        mailColumn =
+                grid.addColumn(Teacher::getEmail)
+                        .setComparator(Teacher::getEmail).setHeader("Email");
+    }
 
     private void addFiltersToGrid() {
         HeaderRow filterRow = grid.appendHeaderRow();
 
-        TextField idFilter = new TextField();
-        idFilter.setPlaceholder(FILTER);
-        idFilter.setClearButtonVisible(true);
-        idFilter.setWidth("100%");
-        idFilter.setValueChangeMode(ValueChangeMode.EAGER);
-        idFilter.addValueChangeListener(event -> dataProvider.addFilter(
-                teacher -> StringUtils.containsIgnoreCase(teacher.getId().toString(), idFilter.getValue())));
+        TextField idFilter = createFilter(t -> t.getId().toString());
         filterRow.getCell(idColumn).setComponent(idFilter);
 
-        TextField firstNameFilter = new TextField();
-        firstNameFilter.setPlaceholder(FILTER);
-        firstNameFilter.setClearButtonVisible(true);
-        firstNameFilter.setWidth("100%");
-        firstNameFilter.setValueChangeMode(ValueChangeMode.EAGER);
-        firstNameFilter.addValueChangeListener(event -> dataProvider
-                .addFilter(teacher -> StringUtils.containsIgnoreCase(teacher.getFirstName(), firstNameFilter.getValue())));
+        TextField firstNameFilter = createFilter(Teacher::getFirstName);
         filterRow.getCell(firstNameColumn).setComponent(firstNameFilter);
 
-        TextField lastNameFilter = new TextField();
-        lastNameFilter.setPlaceholder(FILTER);
-        lastNameFilter.setClearButtonVisible(true);
-        lastNameFilter.setWidth("100%");
-        lastNameFilter.setValueChangeMode(ValueChangeMode.EAGER);
-        lastNameFilter.addValueChangeListener(event -> dataProvider
-                .addFilter(teacher -> StringUtils.containsIgnoreCase(teacher.getLastName(), lastNameFilter.getValue())));
+        TextField lastNameFilter = createFilter(Teacher::getLastName);
         filterRow.getCell(lastNameColumn).setComponent(lastNameFilter);
 
+        TextField phoneFilter = createFilter(Teacher::getPhone);
+        filterRow.getCell(phoneNumberColumn).setComponent(phoneFilter);
+
+        TextField mailFilter = createFilter(Teacher::getEmail);
+        filterRow.getCell(mailColumn).setComponent(mailFilter);
     }
 
-    private List<Teacher> getTeachers() {
-        return Arrays.asList(
-                createTeacher(4957, "Amarachi", " Nkechi"),
-                createTeacher(675, "Bonelwa", "Ngqawana"),
-                createTeacher(6816, "Debashis", " Bhuiyan"),
-                createTeacher(5144, "Jacqueline", " Asong"));
-    }
-
-    private Teacher createTeacher(long id, String firstName, String lastName) {
-        return Teacher.builder()
-                .id(id)
-                .firstName(firstName)
-                .lastName(lastName)
-                .build();
+    private TextField createFilter(Function<Teacher, String> getValue) {
+        TextField filter = new TextField();
+        filter.setPlaceholder(FILTER);
+        filter.setClearButtonVisible(true);
+        filter.setWidth("100%");
+        filter.setValueChangeMode(ValueChangeMode.EAGER);
+        filter.addValueChangeListener(event -> dataProvider.addFilter(
+                teacher -> StringUtils.containsIgnoreCase(getValue.apply(teacher), filter.getValue())));
+        return filter;
     }
 }

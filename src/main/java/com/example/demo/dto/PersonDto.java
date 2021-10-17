@@ -27,5 +27,4 @@ public class PersonDto {
     public String toString() {
         return String.format("%s = [ %s, %s, %s, %s, %s]", "PersonDto", name, surname, email, phone, occupation);
     }
-
 }

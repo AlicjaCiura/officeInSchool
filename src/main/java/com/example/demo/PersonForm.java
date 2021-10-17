@@ -1,7 +1,6 @@
 package com.example.demo;
 
 import com.example.demo.dto.PersonDto;
-import com.example.demo.service.TeacherService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.customfield.CustomField;
@@ -13,7 +12,6 @@ import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @SpringComponent
 public class PersonForm extends Div {
@@ -22,22 +20,13 @@ public class PersonForm extends Div {
     private final TextField surname = new TextField("Last name");
     private final EmailField email = new EmailField("Email address");
     private final PhoneNumberField phone = new PhoneNumberField("Phone number");
-    private final TextField occupation = new TextField("Occupation");
-
-
-    @Autowired
-    private TeacherService teacherService;
 
     Binder<PersonDto> binder = new Binder<>(PersonDto.class, true);
-
-
+    
     public PersonForm() {
         addClassName("new-teacher-view");
-
         add(createTitle());
         add(createFormLayout());
-
-        binder.bindInstanceFields(this);
         clearForm();
     }
 
@@ -52,7 +41,7 @@ public class PersonForm extends Div {
     private Component createFormLayout() {
         FormLayout formLayout = new FormLayout();
         email.setErrorMessage("Please enter a valid email address");
-        formLayout.add(name, surname, phone, email, occupation);
+        formLayout.add(name, surname, phone, email);
         return formLayout;
     }
 

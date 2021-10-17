@@ -10,8 +10,9 @@ import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.theme.Theme;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The main view is a top-level placeholder for other views.
@@ -66,7 +67,7 @@ public class MainLayout extends AppLayout {
 
         Header header = new Header(toggle, viewTitle);
         header.addClassNames("bg-base", "border-b", "border-contrast-10", "box-border", "flex", "h-xl", "items-center",
-                "w-full");
+                             "w-full");
         return header;
     }
 
@@ -75,7 +76,7 @@ public class MainLayout extends AppLayout {
         appName.addClassNames("flex", "items-center", "h-xl", "m-0", "px-m", "text-m");
 
         com.vaadin.flow.component.html.Section section = new com.vaadin.flow.component.html.Section(appName,
-                createNavigation(), createFooter());
+                                                                                                    createNavigation(), createFooter());
         section.addClassNames("flex", "flex-col", "items-stretch", "max-h-full", "min-h-full");
         return section;
     }
@@ -104,16 +105,10 @@ public class MainLayout extends AppLayout {
     private List<RouterLink> createLinks() {
         MenuItemInfo[] menuItems = new MenuItemInfo[]{ //
                 new MenuItemInfo("Hello World", "la la-globe", MainView.class), //
-
-                //new MenuItemInfo("About", "la la-file", AboutView.class), //
-
+                new MenuItemInfo("Teachers", "la la-users", TeacherView.class), //
         };
-        List<RouterLink> links = new ArrayList<>();
-        for (MenuItemInfo menuItemInfo : menuItems) {
-            links.add(createLink(menuItemInfo));
-
-        }
-        return links;
+        return Arrays.stream(menuItems).map(MainLayout::createLink)
+                .collect(Collectors.toList());
     }
 
     private static RouterLink createLink(MenuItemInfo menuItemInfo) {
