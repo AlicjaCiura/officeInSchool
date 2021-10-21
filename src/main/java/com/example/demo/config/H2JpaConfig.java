@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -20,7 +20,7 @@ import java.util.Properties;
 
 
 @Configuration
-@EnableJpaRepositories(basePackages = {"com.example.demo.service"})
+@EnableJpaRepositories(basePackages = {"com.example.demo.service", "com.example.demo.repository"})
 @PropertySource("classpath:application.properties")
 @EnableTransactionManagement
 @Profile("default")

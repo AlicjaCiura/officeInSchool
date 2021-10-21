@@ -4,6 +4,9 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -20,10 +23,12 @@ public class Teacher {
 
     @Getter
     @Column
+    @NotBlank
     private String lastName;
 
     @Getter
     @Column
+    @NotBlank
     private String firstName;
 
     @Getter

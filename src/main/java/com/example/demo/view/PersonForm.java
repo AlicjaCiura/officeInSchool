@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.view;
 
 import com.example.demo.dto.PersonDto;
 import com.vaadin.flow.component.Component;
@@ -21,12 +21,13 @@ public class PersonForm extends Div {
     private final EmailField email = new EmailField("Email address");
     private final PhoneNumberField phone = new PhoneNumberField("Phone number");
 
-    Binder<PersonDto> binder = new Binder<>(PersonDto.class, true);
+    Binder<PersonDto>   binder = new Binder<>(PersonDto.class, true);
     
     public PersonForm() {
         addClassName("new-teacher-view");
         add(createTitle());
         add(createFormLayout());
+        binder.bindInstanceFields(this);
         clearForm();
     }
 
@@ -41,6 +42,8 @@ public class PersonForm extends Div {
     private Component createFormLayout() {
         FormLayout formLayout = new FormLayout();
         email.setErrorMessage("Please enter a valid email address");
+        name.setRequired(true);
+        surname.setRequired(true);
         formLayout.add(name, surname, phone, email);
         return formLayout;
     }

@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.view;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;

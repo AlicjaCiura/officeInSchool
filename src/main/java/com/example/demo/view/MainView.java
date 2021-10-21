@@ -1,6 +1,7 @@
-package com.example.demo;
+package com.example.demo.view;
 
 import com.example.demo.service.TeacherService;
+import com.example.demo.view.MainLayout;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;

@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.view;
 
 import com.example.demo.model.Teacher;
 import com.example.demo.service.TeacherService;
@@ -12,8 +12,13 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.TransactionSystemException;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @SpringComponent
 public class DialogNewPerson extends Dialog {
@@ -32,24 +37,37 @@ public class DialogNewPerson extends Dialog {
         setWidth("50%");
         setHeight("50%");
 
-        personForm.binder.bindInstanceFields(this);
         personForm.clearForm();
 
-        cancel.addClickListener(e -> personForm.clearForm());
-        save.addClickListener(event -> {
-            Teacher t = teacherService.saveOrUpdate(personForm.binder.getBean());
-            Optional.ofNullable(t).map(
-                    i -> success())
-                    .orElse(failed())
-                    .open();
+        cancel.addClickListener(e -> {
+            personForm.clearForm();
             this.removeAll();
             this.close();
         });
-        this.close();
+        save.addClickListener(event -> {
+            try {
+                Optional<Teacher> t = Optional.ofNullable(teacherService.saveOrUpdate(personForm.binder.getBean()));
+                t.map(i -> success()).ifPresent(Notification::open);
+                this.removeAll();
+                this.close();
+            }                                               
+            catch (TransactionSystemException e) {
+                failed(createMessage(e)).open();
+            }
+        });
+
     }
 
-    private Notification failed() {
-        Notification notification = new Notification("From not submitted!", 500, Notification.Position.BOTTOM_CENTER);
+    private String createMessage(TransactionSystemException e) {
+        Set<ConstraintViolation<?>> error = ((ConstraintViolationException) e.getCause().getCause()).getConstraintViolations();
+        return error.stream()
+                .map(err -> String.format("%s %s", err.getPropertyPath(), err.getMessage()))
+                .collect(Collectors.joining("\n"));
+    }
+
+    private Notification failed(String message) {
+        Notification notification = new Notification("From not submitted! \n" + message, 10000,
+                                                     Notification.Position.MIDDLE);
         notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
         return notification;
     }
@@ -57,7 +75,7 @@ public class DialogNewPerson extends Dialog {
     private Notification success() {
         Notification notification = new Notification("From submitted!", 500, Notification.Position.BOTTOM_CENTER);
         notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-        return  notification  ;
+        return notification;
     }
 
     private Component createTitle() {

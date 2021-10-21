@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.view;
 
 import com.example.demo.model.Teacher;
 import com.example.demo.service.TeacherService;
@@ -15,8 +15,6 @@ import com.vaadin.flow.router.Route;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.function.Function;
 
 @PageTitle("Teachers")
@@ -46,9 +44,12 @@ public class TeacherView extends HorizontalLayout {
     }
 
     private void createButton() {
-        DialogNewPerson d = new DialogNewPerson(teacherService);
         addNew = new Button("New teacher");
-        addNew.addClickListener(e -> d.open());
+        addNew.addClickListener(e -> {
+                                    DialogNewPerson d = new DialogNewPerson(teacherService);
+                                    d.open();
+                                }
+                               );
     }
 
     private void createGrid() {
