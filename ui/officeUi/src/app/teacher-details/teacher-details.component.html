@@ -1,0 +1,10 @@
+
+<p>teacher-details works!</p>
+<div *ngIf="teacher">
+  <h2>{{teacher.firstName }} Details</h2>
+  <div><span>id: </span>{{teacher.id}}</div>
+  <div>
+    <label for="name">Teacher name: </label>
+    <input id="name" [(ngModel)]="teacher.firstName" placeholder="name">
+  </div>
+</div>
