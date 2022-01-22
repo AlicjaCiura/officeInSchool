@@ -1,6 +1,10 @@
-<h1>{{title}}</h1>
-<nav>
-  <a routerLink="/dashboard">Home</a>
-  <a routerLink="/teachers">Teachers</a>
-</nav>
+<mat-drawer-container class="example-container">
+  <mat-drawer  class="menu" mode="side" opened><h1>Menu</h1>
+    <nav><a routerLink="/dashboard">Home</a></nav>
+    <nav><a routerLink="/teachers">Teachers</a>
+    </nav>
+  </mat-drawer>
+  <mat-drawer-content><h1>{{title}}</h1></mat-drawer-content>
+</mat-drawer-container>
+
 <router-outlet></router-outlet>

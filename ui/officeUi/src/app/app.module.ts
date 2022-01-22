@@ -7,6 +7,8 @@ import { AppComponent } from './app.component';
 import { TeacherComponent } from './teacher/teacher.component';
 import { TeacherDetailsComponent } from './teacher-details/teacher-details.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatSidenavModule} from '@angular/material/sidenav';
 
 @NgModule({
   declarations: [
@@ -20,6 +22,8 @@ import { DashboardComponent } from './dashboard/dashboard.component';
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
+    BrowserAnimationsModule,
+    MatSidenavModule
   ],
   providers: [],
   bootstrap: [AppComponent]
