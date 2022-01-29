@@ -1,6 +1,5 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.PersonDto;
 import com.example.demo.model.Teacher;
 import com.example.demo.repository.TeacherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +13,10 @@ public class TeacherService {
     @Autowired
     private TeacherRepository teacherRepository;
     
-    public Teacher saveOrUpdate(PersonDto personDto) {
+    public Teacher saveOrUpdate(Teacher personDto) {
         return teacherRepository.save(Teacher.builder()
-                                              .firstName(personDto.getName())
-                                              .lastName(personDto.getSurname())
+                                              .firstName(personDto.getFirstName())
+                                              .lastName(personDto.getLastName())
                                               .email(personDto.getEmail())
                                               .phone(personDto.getPhone())
                                               .build());
