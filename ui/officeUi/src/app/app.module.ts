@@ -8,7 +8,8 @@ import { TeacherComponent } from './teacher/teacher.component';
 import { TeacherDetailsComponent } from './teacher-details/teacher-details.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {MatSidenavModule} from '@angular/material/sidenav';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatTableModule } from '@angular/material/table';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import {MatSidenavModule} from '@angular/material/sidenav';
     FormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    MatSidenavModule
+    MatSidenavModule,
+    MatTableModule
   ],
   providers: [],
   bootstrap: [AppComponent]
